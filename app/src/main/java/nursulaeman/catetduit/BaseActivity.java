@@ -29,15 +29,17 @@ public abstract class BaseActivity extends AppCompatActivity implements MenuItem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.activity_base);// The base layout that contains your navigation drawer.
+        super.setContentView(R.layout.activity_base);
 
         view_stub = (FrameLayout) findViewById(R.id.view_stub);
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 0, 0);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.app_name);
 
         mDrawerMenu = mNavigationView.getMenu();
         for(int i = 0; i < mDrawerMenu.size(); i++) {
