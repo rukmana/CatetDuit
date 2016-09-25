@@ -11,15 +11,10 @@ public class TransactionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
-/*
-        RelativeLayout mainLayout = (RelativeLayout)findViewById(R.id.layout_contact);
-        View view = getLayoutInflater().inflate(R.layout.activity_contact, mainLayout,false);
-        mainLayout.addView(view);
-*/
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("New Expense"));
-        tabLayout.addTab(tabLayout.newTab().setText("New Income"));
+        tabLayout.addTab(tabLayout.newTab().setText(("New Expense").toLowerCase()));
+        tabLayout.addTab(tabLayout.newTab().setText(("New Income").toLowerCase()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
