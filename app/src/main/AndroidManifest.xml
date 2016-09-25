@@ -15,12 +15,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DashboardActivity"
-            android:noHistory="true"/>
-        <activity android:name=".TransactionActivity"
-            android:noHistory="true"/>
-        <activity android:name=".SyncronizeActivity"
-            android:noHistory="true"/>
+        <activity
+            android:name=".DashboardActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".TransactionActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".SyncronizeActivity"
+            android:noHistory="true" />
+        <activity android:name=".ExpensesFragment" />
+        <activity android:name=".IncomeFragmnet" />
+        <activity android:name=".IncomeFragment"></activity>
     </application>
 
 </manifest>
