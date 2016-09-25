@@ -9,5 +9,6 @@ public class TransactionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
+        this.setTitle("Transaction");
     }
 }
