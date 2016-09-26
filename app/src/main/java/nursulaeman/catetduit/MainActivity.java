@@ -2,7 +2,11 @@ package nursulaeman.catetduit;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 public class MainActivity extends BaseActivity {
 
@@ -13,6 +17,15 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.setTitle("Catet Duit");
+
+        ImageView imageView = (ImageView) findViewById(R.id.my_image_view);
+
+        String url1 = "http://walaugelap.my.id/ckeditor_assets/pictures/6/content_msg1.jpg";
+
+        Glide.with(this)
+                .load(url1)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
     }
 
 
