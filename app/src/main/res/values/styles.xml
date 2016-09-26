@@ -27,4 +27,9 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="etStyle01">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>
