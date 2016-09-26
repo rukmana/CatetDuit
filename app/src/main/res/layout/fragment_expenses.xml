@@ -30,9 +30,8 @@
             <android.support.design.widget.TextInputLayout style="@style/etStyle01">
 
                 <EditText
+                    style="@style/etStyleNum"
                     android:id="@+id/et_amo_expenses"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:hint="Amount" />
 
             </android.support.design.widget.TextInputLayout>
@@ -40,9 +39,8 @@
             <android.support.design.widget.TextInputLayout style="@style/etStyle01">
 
                 <EditText
+                    style="@style/etStyleDat"
                     android:id="@+id/et_date_expenses"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:hint="Date" />
 
             </android.support.design.widget.TextInputLayout>

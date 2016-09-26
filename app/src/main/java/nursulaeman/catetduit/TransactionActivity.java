@@ -13,8 +13,8 @@ public class TransactionActivity extends BaseActivity {
         setContentView(R.layout.activity_transaction);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(("New Expense").toLowerCase()));
         tabLayout.addTab(tabLayout.newTab().setText(("New Income").toLowerCase()));
+        tabLayout.addTab(tabLayout.newTab().setText(("New Expense").toLowerCase()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);

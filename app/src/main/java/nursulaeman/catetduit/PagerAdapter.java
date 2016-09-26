@@ -20,10 +20,10 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                ExpensesFragment tab1 = new ExpensesFragment();
+                IncomeFragment tab1 = new IncomeFragment();
                 return tab1;
             case 1:
-                IncomeFragment tab2 = new IncomeFragment();
+                ExpensesFragment tab2 = new ExpensesFragment();
                 return tab2;
             default:
                 return null;

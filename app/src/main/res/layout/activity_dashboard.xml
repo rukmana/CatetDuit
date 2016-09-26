@@ -16,7 +16,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="240dp">
+            android:layout_height="210dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -28,20 +28,37 @@
                 android:paddingTop="@dimen/activity_vertical_margin">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/tvStyleHeader"
                     android:text="Overview Income" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_income"
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
+                    android:layout_height="130dp"
                     android:scrollbars="vertical" />
 
-                <TextView
+                <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Total" />
+                    android:shrinkColumns="*"
+                    android:stretchColumns="*">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/tvStyleFooter"
+                            android:text="Total  " />
+
+                        <TextView
+                            android:id="@+id/tv_total_I"
+                            style="@style/tvStyleFooter"
+                            android:text="Rp." />
+                    </TableRow>
+
+                </TableLayout>
+
 
             </LinearLayout>
 
@@ -50,11 +67,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""/>
+            android:text="" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="240dp">
+            android:layout_height="210dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -66,22 +83,72 @@
                 android:paddingTop="@dimen/activity_vertical_margin">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/tvStyleHeader"
                     android:text="Overview Expenses" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_expenses"
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
+                    android:layout_height="130dp"
                     android:scrollbars="vertical" />
 
-                <TextView
+                <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Total" />
+                    android:shrinkColumns="*"
+                    android:stretchColumns="*">
 
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/tvStyleFooter"
+                            android:text="Total  " />
+
+                        <TextView
+                            android:id="@+id/tv_total_E"
+                            style="@style/tvStyleFooter"
+                            android:text="Rp." />
+                    </TableRow>
+
+                </TableLayout>
             </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="20dp">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:shrinkColumns="*"
+                    android:stretchColumns="*">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/tvStyleFooter"
+                            android:text="Balance"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+
+                        <TextView
+                            android:id="@+id/tv_balance"
+                            style="@style/tvStyleFooter"
+                            android:text="Rp."
+                            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    </TableRow>
+
+                </TableLayout>
 
         </android.support.v7.widget.CardView>
 
