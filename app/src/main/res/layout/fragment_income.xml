@@ -37,6 +37,16 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout style="@style/etStyle01">
+
+                <EditText
+                    android:id="@+id/et_date_income"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Date" />
+
+            </android.support.design.widget.TextInputLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
