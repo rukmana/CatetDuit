@@ -20,7 +20,7 @@ public class MainActivity extends BaseActivity {
 
         ImageView imageView = (ImageView) findViewById(R.id.my_image_view);
 
-        String url1 = "http://walaugelap.my.id/ckeditor_assets/pictures/6/content_msg1.jpg";
+        String url1 = "http://walaugelap.my.id/ckeditor_assets/pictures/10/content_images.jpeg";
 
         Glide.with(this)
                 .load(url1)
