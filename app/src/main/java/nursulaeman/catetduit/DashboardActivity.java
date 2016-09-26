@@ -17,8 +17,7 @@ public class DashboardActivity extends BaseActivity {
     RecyclerView rv_expenses;
     RecyclerView.Adapter rv_adapter, rv_adapter2;
     RecyclerView.LayoutManager rv_layout_manager, rv_layout_manager2;
-    Cursor incomes;
-    Cursor expenses;
+    Cursor incomes, inc, expenses, exp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,9 @@ public class DashboardActivity extends BaseActivity {
 
         final DatabaseHelper myDB = new DatabaseHelper(this);
         incomes = myDB.listIncome();
+        inc = myDB.listIncome();
         expenses = myDB.listExpense();
+        exp = myDB.listExpense();
 
         // Code Recycleview
 
@@ -50,6 +51,24 @@ public class DashboardActivity extends BaseActivity {
         rv_expenses.setAdapter(rv_adapter2);
 
         // End Recycleview
+
+        int sumI = 0;
+        TextView totalI = (TextView) findViewById(R.id.tv_total_I);
+        while (inc.moveToNext()) {
+            sumI += inc.getInt(inc.getColumnIndex("AMOUNT"));
+        }
+        totalI.setText("Rp. " + String.valueOf(sumI));
+
+        int sumE = 0;
+        TextView totalE = (TextView) findViewById(R.id.tv_total_E);
+        while (exp.moveToNext()) {
+            sumE += exp.getInt(exp.getColumnIndex("AMOUNT"));
+        }
+        totalE.setText("Rp. " + String.valueOf(sumE));
+
+        TextView balance = (TextView) findViewById(R.id.tv_balance);
+        balance.setText("Rp. " + String.valueOf(sumI-sumE));
+
     }
 
     private String[] loadincome() {
@@ -142,6 +161,7 @@ public class DashboardActivity extends BaseActivity {
 
 
 }
+
 
 
 
