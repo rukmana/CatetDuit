@@ -30,7 +30,7 @@
             <android.support.design.widget.TextInputLayout style="@style/etStyle01">
 
                 <EditText
-                    android:id="@+id/et_Amo_expenses"
+                    android:id="@+id/et_amo_expenses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Amount" />
