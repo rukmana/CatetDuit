@@ -83,7 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor listExpense() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor expense = db.rawQuery("SELECT * FROM" + TABLE_NAME_EXPENSES, null);
+        Cursor expense = db.rawQuery("SELECT * FROM " + TABLE_NAME_EXPENSES, null);
         return expense;
     }
 
