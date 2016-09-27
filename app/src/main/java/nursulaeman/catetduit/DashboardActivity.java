@@ -1,5 +1,6 @@
 package nursulaeman.catetduit;
 
+import android.app.Dialog;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,10 +113,65 @@ public class DashboardActivity extends BaseActivity {
         public void onBindViewHolder(ViewHolder holder, final int position) {
             holder.tv_income.setText(ds_data1[position]);
 
+            // dialog
+
             holder.tv_income.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(DashboardActivity.this, "Recycle Click " + position, Toast.LENGTH_SHORT).show();
+
+                    // costum dialog
+                    final Dialog dialog = new Dialog(DashboardActivity.this);
+                    dialog.setContentView(R.layout.dialog_income);
+                    dialog.setTitle("Update or Delete");
+
+                    incomes.moveToPosition(position);
+
+                    final int Idi = incomes.getInt(incomes.getColumnIndexOrThrow("ID"));
+
+                    final EditText des_in = (EditText) dialog.findViewById(R.id.et_dialog_des_income);
+                    String des_ins = incomes.getString(incomes.getColumnIndex("DESCRIPTION"));
+                    des_in.setText(des_ins);
+
+                    final EditText amo_in = (EditText) dialog.findViewById(R.id.et_dialog_amo_income);
+                    String amo_ins = incomes.getString(incomes.getColumnIndex("AMOUNT"));
+                    amo_in.setText(amo_ins);
+
+                    Button dialogButton1 = (Button) dialog.findViewById(R.id.dialogButtonU);
+                    dialogButton1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DatabaseHelper myDB1 = new DatabaseHelper(DashboardActivity.this);
+                            myDB1.updateIncome(String.valueOf(Idi), des_in.getText().toString(), amo_in.getText().toString());
+                            Toast.makeText(DashboardActivity.this, "updated", Toast.LENGTH_SHORT).show();
+                            finish();
+                            startActivity(getIntent());
+                            dialog.dismiss();
+                        }
+                    });
+
+                    Button dialogButton2 = (Button) dialog.findViewById(R.id.dialogButtonD);
+                    dialogButton2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DatabaseHelper myDB1 = new DatabaseHelper(DashboardActivity.this);
+                            myDB1.deleteIncome(String.valueOf(Idi));
+                            Toast.makeText(DashboardActivity.this, "deleted", Toast.LENGTH_SHORT).show();
+                            finish();
+                            startActivity(getIntent());
+                            dialog.dismiss();
+                        }
+                    });
+
+                    Button dialogButton3 = (Button) dialog.findViewById(R.id.dialogButtonC);
+                    dialogButton3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialog.show();
+
                 }
             });
         }

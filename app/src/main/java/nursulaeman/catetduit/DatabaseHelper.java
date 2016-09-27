@@ -87,13 +87,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return expense;
     }
 
-    public boolean updateIncome(String id, String desc, String amount, String date) {
+    public boolean updateIncome(String id, String desc, String amount/*, String date*/) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
         content_values.put(COL_IN_ID, id);
         content_values.put(COL_IN_DES, desc);
         content_values.put(COL_IN_AMO, amount);
-        content_values.put(COL_IN_DAT, date);
+        /*content_values.put(COL_IN_DAT, date);*/
         db.update(TABLE_NAME_INCOME, content_values, "ID = ? ", new String[]{id});
         return true;
     }
