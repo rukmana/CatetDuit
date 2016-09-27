@@ -8,7 +8,7 @@
     <android.support.design.widget.TextInputLayout style="@style/etStyle01">
 
         <EditText
-            android:id="@+id/et_dialog_des_income"
+            android:id="@+id/et_dialog_des"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="description"/>
@@ -18,7 +18,7 @@
     <android.support.design.widget.TextInputLayout style="@style/etStyle01">
 
         <EditText
-            android:id="@+id/et_dialog_amo_income"
+            android:id="@+id/et_dialog_amo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="amount"/>
