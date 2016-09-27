@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -105,8 +106,15 @@ public class DashboardActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
             holder.tv_income.setText(ds_data1[position]);
+
+            holder.tv_income.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(DashboardActivity.this, "Recycle Click " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         @Override
@@ -149,8 +157,15 @@ public class DashboardActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
             holder.tv_expenses.setText(ds_data2[position]);
+
+            holder.tv_expenses.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(DashboardActivity.this, "Recycle Click " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         @Override
