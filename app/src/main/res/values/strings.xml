@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CatetDuit</string>
+    <string name="sync">Syncronize</string>
 </resources>
+
