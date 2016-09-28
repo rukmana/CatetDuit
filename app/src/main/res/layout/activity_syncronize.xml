@@ -9,6 +9,11 @@
     android:paddingTop="@dimen/pad_top"
     tools:context="nursulaeman.catetduit.SyncronizeActivity">
 
+    <TextView
+        android:id="@+id/tv_respond"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/btn_Sync"
         android:text="@string/sync"
