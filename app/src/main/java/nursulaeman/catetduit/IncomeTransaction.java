@@ -1,5 +1,7 @@
 package nursulaeman.catetduit;
 
+import android.database.Cursor;
+
 /**
  * Created by nur on 28/09/16.
  */
@@ -9,7 +11,7 @@ public class IncomeTransaction {
     private String amount;
     private String date;
 
-    public IncomeTransaction(int id, String description, String amount, String date) {
+    public IncomeTransaction(int id,String description, String amount, String date) {
         this.id = id;
         this.description = description;
         this.amount = amount;

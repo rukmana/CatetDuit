@@ -16,18 +16,18 @@ public interface IncomeTransactionApi {
     Call<IncomeTransactions> getIncomeTransactions();
 
     @GET("/income_transactions/{id}")
-    Call<IncomeTransaction> getIncomeTransction(@Path("id") String incomeTransaction_id);
+    Call<IncomeTransaction> getIncomeTransction(@Path("id") String incometransaction_id);
 
 
     @PUT("/income_transactions/{id}")
-    Call<IncomeTransaction> updateIncomeTransaction(@Path("id") int incomeTransaction_id, @Body IncomeTransaction incomeTransaction);
+    Call<IncomeTransaction> updateIncomeTransaction(@Path("id") int incometransaction_id, @Body IncomeTransaction incometransaction);
 
 
     @POST("/income_transactions")
-    Call<IncomeTransaction> saveIncomeTransaction(@Body IncomeTransaction incomeTransaction);
+    Call<IncomeTransaction> saveIncomeTransaction(@Body IncomeTransaction incometransaction);
 
 
     @DELETE("/income_transactions/{id}")
-    Call<IncomeTransaction> deleteIncomeTransaction(@Path("id") String incomeTransaction_id);
+    Call<IncomeTransaction> deleteIncomeTransaction(@Path("id") String incometransaction_id);
 
 }
