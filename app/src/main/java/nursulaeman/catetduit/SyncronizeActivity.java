@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,13 +38,13 @@ public class SyncronizeActivity extends BaseActivity {
                         .create();
 
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://private-61259e-catetduit.apiary-mock.com/")
+                        .baseUrl("https://private-fc7f8-cateduit.apiary-mock.com/")
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
 
-                IncomeTransactionApi incometrans_api = retrofit.create(IncomeTransactionApi.class);
+                IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-                Call<IncomeTransactions> call = incometrans_api.getIncomeTransactions();
+                Call<IncomeTransactions> call = income_api.getIncomeTransactions();
                 call.enqueue(new Callback<IncomeTransactions>() {
 
                     @Override

@@ -8,11 +8,11 @@ import java.util.List;
  * Created by nur on 28/09/16.
  */
 public class IncomeTransactions {
-    @SerializedName("incomeTransactions")
-    public List<IncomeTransactionItem> incomeTransactions;
-    public List<IncomeTransactionItem> getIncomeTransactions() { return incomeTransactions; }
-    public void setIncomeTransactions(List<IncomeTransactionItem> incomeTransactions) { this.incomeTransactions = incomeTransactions; }
-    public IncomeTransactions(List<IncomeTransactionItem> incomeTransactions) { this.incomeTransactions = incomeTransactions; }
+    @SerializedName("income_transactions")
+    public List<IncomeTransactionItem> income_transactions;
+    public List<IncomeTransactionItem> getIncomeTransactions() { return income_transactions; }
+    public void setIncomeTransactions(List<IncomeTransactionItem> income_transactions) { this.income_transactions = income_transactions; }
+    public IncomeTransactions(List<IncomeTransactionItem> income_transactions) { this.income_transactions = income_transactions; }
 
     public class IncomeTransactionItem {
         private int id;
