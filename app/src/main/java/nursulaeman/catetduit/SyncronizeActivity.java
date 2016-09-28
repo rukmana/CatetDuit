@@ -51,6 +51,9 @@ public class SyncronizeActivity extends BaseActivity {
                     public void onResponse(Call<IncomeTransactions> call, Response<IncomeTransactions> response) {
                         int status = response.code();
                         tv_respond.setText(String.valueOf(status));
+                        for (IncomeTransactions.IncomeTransactionItem user : response.body().getIncomeTransactions()) {
+                            Toast.makeText(SyncronizeActivity.this, "cek", Toast.LENGTH_LONG).show();
+                        }
                     }
 
                     @Override
