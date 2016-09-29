@@ -93,7 +93,6 @@ public class SyncronizeActivity extends BaseActivity {
                 }
             });
         }
-      //  progressDialog.dismiss();
     }
 
 }
