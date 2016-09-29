@@ -40,20 +40,26 @@ public class SyncronizeActivity extends BaseActivity {
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                progressDialog = new ProgressDialog(SyncronizeActivity.this);
-                progressDialog.setTitle("Syncronize on Process");
-                progressDialog.setMessage("Loading ...");
-                progressDialog.setProgress(0);
-
-                progressDialog.show();
                 postApi();
-                progressDialog.dismiss();
             }
         });
     }
 
     private void postApi() {
+
+        int counter = 0;
+
+        progressDialog = new ProgressDialog(SyncronizeActivity.this);
+        progressDialog.setTitle("Syncronize on Process");
+        progressDialog.setMessage("Loading ...");
+        progressDialog.setProgress(0);
+
+        progressDialog.show();
+
+        counter++;
+
+        Integer current_status = (int) ((counter / (float) incomes.getColumnCount()) * 100);
+        progressDialog.setProgress(current_status);
 
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -64,25 +70,30 @@ public class SyncronizeActivity extends BaseActivity {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
+        final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        while (incomes.moveToNext()) {
+        for (incomes.moveToFirst(); !incomes.isAfterLast(); incomes.moveToNext()){
             IncomeTransaction income_save = new IncomeTransaction(incomes.getInt(0),incomes.getString(1),incomes.getString(2),incomes.getString(3));
             Call<IncomeTransaction> call = income_api.saveIncomeTransaction(income_save);
             call.enqueue(new Callback<IncomeTransaction>() {
                 @Override
                 public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
                     int status = response.code();
-                    Toast.makeText(SyncronizeActivity.this, String.valueOf(status)+" --- "+String.valueOf(response.body()), Toast.LENGTH_LONG).show();
+                    tv_respond.setText(String.valueOf(incomes.getPosition()));
+                    if (incomes.isAfterLast()==true) {
+                        if (progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    }
                 }
-
                 @Override
                 public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                    progressDialog.dismiss();
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
                     Toast.makeText(SyncronizeActivity.this, String.valueOf(t), Toast.LENGTH_LONG).show();
                 }
             });
         }
+      //  progressDialog.dismiss();
     }
 
 }
