@@ -77,7 +77,7 @@ public class DashboardActivity extends BaseActivity {
     private String[] loadincome() {
         String[] incomesA = new String[incomes.getCount()];
         while (incomes.moveToNext()) {
-            incomesA[incomes.getPosition()]=incomes.getString(1)+" "+incomes.getString(2);
+            incomesA[incomes.getPosition()]=incomes.getString(1)+" "+incomes.getString(2)+" "+incomes.getString(4);
         }
     return incomesA;
     }

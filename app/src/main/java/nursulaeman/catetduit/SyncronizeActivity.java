@@ -81,7 +81,6 @@ public class SyncronizeActivity extends BaseActivity {
 
         IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-
         IncomeTransaction incometransaction = new IncomeTransaction();
         Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
         call.enqueue(new Callback<IncomeTransaction>() {
@@ -89,7 +88,11 @@ public class SyncronizeActivity extends BaseActivity {
             public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
                 int status = response.code();
                 for (incomes.moveToFirst(); !incomes.isAfterLast(); incomes.moveToNext()) {
-                    tv_respond.setText(String.valueOf(status) + " : last income sync : " + String.valueOf(incomes.getPosition()));
+                   // tv_respond.setText(String.valueOf(status) + " : last income sync : " + String.valueOf(incomes.getPosition()));
+                    tv_respond.setText(String.valueOf(incomes.getPosition()));
+                    DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
+                    myDB1.updateIncomex(String.valueOf(incomes.getInt(0)), tv_respond.getText().toString());
+                    Toast.makeText(SyncronizeActivity.this, String.valueOf(incomes.getPosition()), Toast.LENGTH_SHORT).show();
                 }
                 if (status == 201) {
                     Toast.makeText(SyncronizeActivity.this, "Sync Success", Toast.LENGTH_SHORT).show();
@@ -104,6 +107,9 @@ public class SyncronizeActivity extends BaseActivity {
             public void onFailure(Call<IncomeTransaction> call, Throwable t) {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
+
+              //  DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
+               // myDB1.updateIncomex(String.valueOf(incomes.getInt(0)), tv_respond.getText().toString());
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(SyncronizeActivity.this);
 
@@ -124,11 +130,10 @@ public class SyncronizeActivity extends BaseActivity {
                                     e.printStackTrace();
                                 }
                                 dialog.dismiss();
-                                Toast.makeText(SyncronizeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SyncronizeActivity.this, "Internet Disonnect", Toast.LENGTH_SHORT).show();
                             }
                         });
                 alert.show();
-                //Toast.makeText(SyncronizeActivity.this, String.valueOf(t), Toast.LENGTH_LONG).show();
             }
         });
     }

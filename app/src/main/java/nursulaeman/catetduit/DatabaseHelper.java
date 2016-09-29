@@ -100,6 +100,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateIncomex(String id, String tmp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues content_values = new ContentValues();
+        content_values.put(COL_IN_ID, id);
+        content_values.put(COL_IN_TMP, tmp);
+        db.update(TABLE_NAME_INCOME, content_values, "ID = ? ", new String[]{id});
+        return true;
+    }
+
     public boolean updateExpense(String id, String desc, String amount/*, String date*/) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
