@@ -79,7 +79,12 @@ public class SyncronizeActivity extends BaseActivity {
                 @Override
                 public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
                     int status = response.code();
-                    tv_respond.setText(String.valueOf(incomes.getPosition()));
+                    tv_respond.setText(String.valueOf(status)+ " : last income sync : " + String.valueOf(incomes.getPosition()));
+                    if (status==201) {
+                        Toast.makeText(SyncronizeActivity.this, "Sync Success", Toast.LENGTH_SHORT).show();
+                    } else if (status==400) {
+                        Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
+                    }
                     if (incomes.isAfterLast()==true) {
                         if (progressDialog.isShowing())
                         progressDialog.dismiss();
