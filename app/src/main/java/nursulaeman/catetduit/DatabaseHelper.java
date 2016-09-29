@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_IN_DES = "DESCRIPTION";
     public static final String COL_IN_AMO = "AMOUNT";
     public static final String COL_IN_DAT = "DATE";
+    public static final String COL_IN_TMP = "TMP";
 
     public static final String TABLE_NAME_EXPENSES = "expenses";
     public static final String COL_EX_ID = "ID";
@@ -30,7 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_IN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_IN_DES + " TEXT, " +
             COL_IN_AMO + " TEXT, " +
-            COL_IN_DAT + " TEXT );";
+            COL_IN_DAT + " TEXT, " +
+            COL_IN_TMP + " TEXT );";
 
     public static final String TABLE_CREATE_EXPENSES = "CREATE TABLE " + TABLE_NAME_EXPENSES + " ( " +
             COL_EX_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
