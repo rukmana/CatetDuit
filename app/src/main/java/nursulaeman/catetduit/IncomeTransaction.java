@@ -11,13 +11,6 @@ public class IncomeTransaction {
     private String amount;
     private String date;
 
-    public IncomeTransaction(int id,String description, String amount, String date) {
-        this.id = id;
-        this.description = description;
-        this.amount = amount;
-        this.date = date;
-    }
-
     public int getId() {
         return id;
     }

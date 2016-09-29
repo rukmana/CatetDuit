@@ -1,6 +1,8 @@
 package nursulaeman.catetduit;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,18 +44,23 @@ public class SyncronizeActivity extends BaseActivity {
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postApi();
+                try {
+                    postApi();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    private void postApi() {
+    private void postApi() throws JSONException {
 
         int counter = 0;
 
         progressDialog = new ProgressDialog(SyncronizeActivity.this);
         progressDialog.setTitle("Syncronize on Process");
         progressDialog.setMessage("Loading ...");
+        progressDialog.setCancelable(false);
         progressDialog.setProgress(0);
 
         progressDialog.show();
@@ -70,36 +79,63 @@ public class SyncronizeActivity extends BaseActivity {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
+        IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        for (incomes.moveToFirst(); !incomes.isAfterLast(); incomes.moveToNext()){
-            IncomeTransaction income_save = new IncomeTransaction(incomes.getInt(0),incomes.getString(1),incomes.getString(2),incomes.getString(3));
-            Call<IncomeTransaction> call = income_api.saveIncomeTransaction(income_save);
-            call.enqueue(new Callback<IncomeTransaction>() {
-                @Override
-                public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
-                    int status = response.code();
-                    tv_respond.setText(String.valueOf(status)+ " : last income sync : " + String.valueOf(incomes.getPosition()));
-                    if (status==201) {
-                        Toast.makeText(SyncronizeActivity.this, "Sync Success", Toast.LENGTH_SHORT).show();
-                    } else if (status==400) {
-                        Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
-                    }
-                    if (incomes.isAfterLast()==true) {
-                        if (progressDialog.isShowing())
-                        progressDialog.dismiss();
-                    }
+
+        IncomeTransaction incometransaction = new IncomeTransaction();
+        Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
+        call.enqueue(new Callback<IncomeTransaction>() {
+            @Override
+            public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
+                int status = response.code();
+                for (incomes.moveToFirst(); !incomes.isAfterLast(); incomes.moveToNext()) {
+                    tv_respond.setText(String.valueOf(status) + " : last income sync : " + String.valueOf(incomes.getPosition()));
                 }
-                @Override
-                public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                    if (progressDialog.isShowing())
-                        progressDialog.dismiss();
-                    Toast.makeText(SyncronizeActivity.this, String.valueOf(t), Toast.LENGTH_LONG).show();
+                if (status == 201) {
+                    Toast.makeText(SyncronizeActivity.this, "Sync Success", Toast.LENGTH_SHORT).show();
+                } else if (status == 400) {
+                    Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<IncomeTransaction> call, Throwable t) {
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(SyncronizeActivity.this);
+
+                alert.setCancelable(false).setTitle("Syncronize").setMessage("fails synchronize")
+                        .setPositiveButton("Skip", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(SyncronizeActivity.this, "Skip.", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    postApi();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                dialog.dismiss();
+                                Toast.makeText(SyncronizeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                alert.show();
+                //Toast.makeText(SyncronizeActivity.this, String.valueOf(t), Toast.LENGTH_LONG).show();
+            }
+        });
     }
-
 }
+
+
+
+
 
 
