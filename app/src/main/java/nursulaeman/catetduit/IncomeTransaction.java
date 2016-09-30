@@ -11,6 +11,12 @@ public class IncomeTransaction {
     private String amount;
     private String date;
 
+    public IncomeTransaction(int id, String description, String amount) {
+        this.id = id;
+        this.description = description;
+        this.amount = amount;
+    }
+
     public int getId() {
         return id;
     }

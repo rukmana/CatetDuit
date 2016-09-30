@@ -81,61 +81,63 @@ public class SyncronizeActivity extends BaseActivity {
 
         IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        IncomeTransaction incometransaction = new IncomeTransaction();
-        Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
-        call.enqueue(new Callback<IncomeTransaction>() {
-            @Override
-            public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
-                int status = response.code();
-                for (incomes.moveToFirst(); !incomes.isAfterLast(); incomes.moveToNext()) {
-                   // tv_respond.setText(String.valueOf(status) + " : last income sync : " + String.valueOf(incomes.getPosition()));
-                    tv_respond.setText(String.valueOf(incomes.getPosition()));
-                    DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
-                    myDB1.updateIncomex(String.valueOf(incomes.getInt(0)), tv_respond.getText().toString());
-                    Toast.makeText(SyncronizeActivity.this, String.valueOf(incomes.getPosition()), Toast.LENGTH_SHORT).show();
+
+
+        for (incomes.moveToFirst(); !incomes.isLast(); incomes.moveToNext()) {
+
+            // POST
+            IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0),incomes.getString(1),incomes.getString(2));
+            Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
+
+            // update to tmp
+            DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
+            myDB1.updateIncomex(String.valueOf(incomes.getInt(0)), String.valueOf(incomes.getPosition()));
+            tv_respond.setText(String.valueOf(incomes.getPosition()));
+
+            call.enqueue(new Callback<IncomeTransaction>() {
+                @Override
+                public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
+                    int status = response.code();
+                    if (status == 201) {
+                        Toast.makeText(SyncronizeActivity.this, "Sync Successs", Toast.LENGTH_SHORT).show();
+                    } else if (status == 400) {
+                        Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                if (status == 201) {
-                    Toast.makeText(SyncronizeActivity.this, "Sync Success", Toast.LENGTH_SHORT).show();
-                } else if (status == 400) {
-                    Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
-                }
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
-            }
 
-            @Override
-            public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
+                @Override
+                public void onFailure(Call<IncomeTransaction> call, Throwable t) {
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
 
-              //  DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
-               // myDB1.updateIncomex(String.valueOf(incomes.getInt(0)), tv_respond.getText().toString());
+                    AlertDialog.Builder alert = new AlertDialog.Builder(SyncronizeActivity.this);
 
-                AlertDialog.Builder alert = new AlertDialog.Builder(SyncronizeActivity.this);
-
-                alert.setCancelable(false).setTitle("Syncronize").setMessage("fails synchronize")
-                        .setPositiveButton("Skip", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(SyncronizeActivity.this, "Skip.", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    postApi();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                    alert.setCancelable(false).setTitle("Syncronize").setMessage("fails synchronize")
+                            .setPositiveButton("Skip", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(SyncronizeActivity.this, "Skip.", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
                                 }
-                                dialog.dismiss();
-                                Toast.makeText(SyncronizeActivity.this, "Internet Disonnect", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                alert.show();
-            }
-        });
+                            })
+                            .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        postApi();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    dialog.dismiss();
+                                    Toast.makeText(SyncronizeActivity.this, "Internet Disonnect", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    alert.show();
+                }
+            });
+        }
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 }
 
