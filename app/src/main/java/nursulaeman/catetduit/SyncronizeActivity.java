@@ -46,6 +46,8 @@ public class SyncronizeActivity extends BaseActivity {
             public void onClick(View v) {
                 try {
                     postApi();
+                 //   if (tv_respond.getText()!="" && progressDialog.isShowing())
+                   //     progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -59,7 +61,7 @@ public class SyncronizeActivity extends BaseActivity {
 
         progressDialog = new ProgressDialog(SyncronizeActivity.this);
         progressDialog.setTitle("Syncronize on Process");
-        progressDialog.setMessage("Loading ...");
+
         progressDialog.setCancelable(false);
         progressDialog.setProgress(0);
 
@@ -69,6 +71,7 @@ public class SyncronizeActivity extends BaseActivity {
 
         Integer current_status = (int) ((counter / (float) incomes.getColumnCount()) * 100);
         progressDialog.setProgress(current_status);
+        progressDialog.setMessage("Loading ..." + String.valueOf(current_status));
 
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -81,34 +84,37 @@ public class SyncronizeActivity extends BaseActivity {
 
         IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-
-
         for (incomes.moveToFirst(); !incomes.isLast(); incomes.moveToNext()) {
 
             // POST
             IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0),incomes.getString(1),incomes.getString(2));
             Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
 
-            // update to tmp
-            DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
-            myDB1.updateIncomex(String.valueOf(incomes.getInt(0)), String.valueOf(incomes.getPosition()));
-            tv_respond.setText(String.valueOf(incomes.getPosition()));
-
             call.enqueue(new Callback<IncomeTransaction>() {
                 @Override
                 public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
                     int status = response.code();
+                    tv_respond.setText(String.valueOf(incomes.getPosition()));
+
+                    // update to tmp
+                    DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
+                    myDB1.updateIncomex(String.valueOf(incomes.getInt(0)), String.valueOf(incomes.getPosition()));
+
                     if (status == 201) {
-                        Toast.makeText(SyncronizeActivity.this, "Sync Successs", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SyncronizeActivity.this, "Sync Success", Toast.LENGTH_SHORT).show();
                     } else if (status == 400) {
                         Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
                     }
+
+                    if (incomes.getPosition()==Integer.parseInt(String.valueOf(tv_respond.getText()))){
+                        progresend();
+                    }
+
                 }
 
                 @Override
                 public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                    if (progressDialog.isShowing())
-                        progressDialog.dismiss();
+                    progresend();
 
                     AlertDialog.Builder alert = new AlertDialog.Builder(SyncronizeActivity.this);
 
@@ -118,6 +124,8 @@ public class SyncronizeActivity extends BaseActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Toast.makeText(SyncronizeActivity.this, "Skip.", Toast.LENGTH_SHORT).show();
                                     dialog.dismiss();
+                                    progresend();
+                                    return;
                                 }
                             })
                             .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
@@ -125,10 +133,11 @@ public class SyncronizeActivity extends BaseActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     try {
                                         postApi();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                    } catch (Throwable t) {
+                                        t.printStackTrace();
                                     }
                                     dialog.dismiss();
+                                   progresend();
                                     Toast.makeText(SyncronizeActivity.this, "Internet Disonnect", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -136,9 +145,13 @@ public class SyncronizeActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    public void progresend () {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
     }
+
 }
 
 
