@@ -28,6 +28,7 @@ public class SyncronizeActivity extends BaseActivity {
     DatabaseHelper myDB;
     Cursor incomes;
     ProgressDialog progressDialog;
+    int st;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,6 @@ public class SyncronizeActivity extends BaseActivity {
             public void onClick(View v) {
                 try {
                     postApi();
-                 //   if (tv_respond.getText()!="" && progressDialog.isShowing())
-                   //     progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -84,7 +83,7 @@ public class SyncronizeActivity extends BaseActivity {
 
         IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        for (incomes.moveToFirst(); !incomes.isLast(); incomes.moveToNext()) {
+        for (incomes.moveToPosition(tempr()); !incomes.isLast(); incomes.moveToNext()) {
 
             // POST
             IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0),incomes.getString(1),incomes.getString(2));
@@ -109,7 +108,6 @@ public class SyncronizeActivity extends BaseActivity {
                     if (incomes.getPosition()==Integer.parseInt(String.valueOf(tv_respond.getText()))){
                         progresend();
                     }
-
                 }
 
                 @Override
@@ -133,6 +131,7 @@ public class SyncronizeActivity extends BaseActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     try {
                                         postApi();
+                                        dialog.dismiss();
                                     } catch (Throwable t) {
                                         t.printStackTrace();
                                     }
@@ -150,6 +149,18 @@ public class SyncronizeActivity extends BaseActivity {
     public void progresend () {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
+    }
+
+    public int tempr () {
+        incomes.moveToLast();
+        while (incomes.moveToPrevious()){
+            if (incomes.getString(4)!=null){
+                st = incomes.getPosition();
+            } else {
+                st= 0;
+            }
+        }
+        return st;
     }
 
 }
