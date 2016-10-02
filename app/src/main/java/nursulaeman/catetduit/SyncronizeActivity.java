@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,9 +27,8 @@ public class SyncronizeActivity extends BaseActivity {
 
     TextView tv_respond;
     DatabaseHelper myDB;
-    Cursor incomes;
+    Cursor incomes, tmp;
     ProgressDialog progressDialog;
-    int st;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +38,14 @@ public class SyncronizeActivity extends BaseActivity {
 
         myDB = new DatabaseHelper(this);
         incomes = myDB.listIncome();
+        tmp = myDB.listTmp();
 
         tv_respond = (TextView) findViewById(R.id.tv_respond);
+
+//        if (tmp.getCount() > 0) {
+//            tmp.moveToFirst();
+//            tv_respond.setText(tmp.getString(1));
+//        }
 
         Button btn_sync = (Button) findViewById(R.id.btn_Sync);
         btn_sync.setOnClickListener(new View.OnClickListener() {
@@ -83,10 +89,11 @@ public class SyncronizeActivity extends BaseActivity {
 
         IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        for (incomes.moveToPosition(tempr()); !incomes.isLast(); incomes.moveToNext()) {
+        for (incomes.moveToFirst(); !incomes.isLast(); incomes.moveToNext()) {
+        //for (incomes.moveToPosition(tempr()); !incomes.isLast(); incomes.moveToNext()) {
 
             // POST
-            IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0),incomes.getString(1),incomes.getString(2));
+            IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0), incomes.getString(1), incomes.getString(2));
             Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
 
             call.enqueue(new Callback<IncomeTransaction>() {
@@ -97,7 +104,14 @@ public class SyncronizeActivity extends BaseActivity {
 
                     // update to tmp
                     DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
-                    myDB1.updateIncomex(String.valueOf(incomes.getInt(0)), String.valueOf(incomes.getPosition()));
+                    Log.e("cek=", String.valueOf(incomes.getPosition()));
+                    if (tmp.getCount() == 0) {
+                        myDB1.saveTmp(String.valueOf(incomes.getPosition()));
+                    } else if (tmp.getCount() > 0) {
+                        tmp.moveToLast();
+                        myDB1.updateTmp(String.valueOf(tmp.getInt(0)), String.valueOf(incomes.getPosition()));
+                    }
+                    Log.e("cek2", String.valueOf(tmp.getString(1)));
 
                     if (status == 201) {
                         Toast.makeText(SyncronizeActivity.this, "Sync Success", Toast.LENGTH_SHORT).show();
@@ -105,7 +119,7 @@ public class SyncronizeActivity extends BaseActivity {
                         Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
                     }
 
-                    if (incomes.getPosition()==Integer.parseInt(String.valueOf(tv_respond.getText()))){
+                    if (incomes.getPosition() == Integer.parseInt(String.valueOf(tv_respond.getText()))) {
                         progresend();
                     }
                 }
@@ -136,7 +150,7 @@ public class SyncronizeActivity extends BaseActivity {
                                         t.printStackTrace();
                                     }
                                     dialog.dismiss();
-                                   progresend();
+                                    progresend();
                                     Toast.makeText(SyncronizeActivity.this, "Internet Disonnect", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -144,23 +158,20 @@ public class SyncronizeActivity extends BaseActivity {
                 }
             });
         }
+
     }
 
-    public void progresend () {
+    public void progresend() {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
     }
 
-    public int tempr () {
-        incomes.moveToLast();
-        while (incomes.moveToPrevious()){
-            if (incomes.getString(4)!=null){
-                st = incomes.getPosition();
-            } else {
-                st= 0;
-            }
-        }
-        return st;
+    private int tempr() {
+        tmp.moveToLast();
+        int tm = 0;
+        tm = (Integer.parseInt(tmp.getString(1)));
+        Log.e("cek3=", String.valueOf(tm));
+        return tm;
     }
 
 }

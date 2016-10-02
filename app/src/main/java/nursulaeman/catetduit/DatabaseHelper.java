@@ -19,7 +19,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_IN_DES = "DESCRIPTION";
     public static final String COL_IN_AMO = "AMOUNT";
     public static final String COL_IN_DAT = "DATE";
-    public static final String COL_IN_TMP = "TMP";
 
     public static final String TABLE_NAME_EXPENSES = "expenses";
     public static final String COL_EX_ID = "ID";
@@ -27,18 +26,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_EX_AMO = "AMOUNT";
     public static final String COL_EX_DAT = "DATE";
 
+    public static final String TABLE_NAME_TMP = "tmp";
+    public static final String COL_TMP_ID = "ID";
+    public static final String COL_TMP = "TMP";
+
     public static final String TABLE_CREATE_INCOME = "CREATE TABLE " + TABLE_NAME_INCOME + " ( " +
             COL_IN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_IN_DES + " TEXT, " +
             COL_IN_AMO + " TEXT, " +
-            COL_IN_DAT + " TEXT, " +
-            COL_IN_TMP + " TEXT );";
+            COL_IN_DAT + " TEXT );";
 
     public static final String TABLE_CREATE_EXPENSES = "CREATE TABLE " + TABLE_NAME_EXPENSES + " ( " +
             COL_EX_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_EX_DES + " TEXT, " +
             COL_EX_AMO + " TEXT, " +
             COL_EX_DAT + " TEXT );";
+
+    public static final String TABLE_CREATE_TMP = "CREATE TABLE " + TABLE_NAME_TMP + " ( " +
+            COL_TMP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COL_TMP + " TEXT );";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,12 +54,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_CREATE_INCOME);
         db.execSQL(TABLE_CREATE_EXPENSES);
+        db.execSQL(TABLE_CREATE_TMP);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_INCOME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_EXPENSES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TMP);
         onCreate(db);
     }
 
@@ -77,6 +85,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    public boolean saveTmp(String tmp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues content_values = new ContentValues();
+        content_values.put(COL_TMP, tmp);
+        long result = db.insert(TABLE_NAME_TMP, null, content_values);
+        return result != -1;
+    }
+
     public Cursor listIncome() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor income = db.rawQuery("SELECT * FROM " + TABLE_NAME_INCOME, null);
@@ -86,6 +102,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor listExpense() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor expense = db.rawQuery("SELECT * FROM " + TABLE_NAME_EXPENSES, null);
+        return expense;
+    }
+
+    public Cursor listTmp() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor expense = db.rawQuery("SELECT * FROM " + TABLE_NAME_TMP, null);
         return expense;
     }
 
@@ -100,15 +122,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean updateIncomex(String id, String tmp) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues content_values = new ContentValues();
-        content_values.put(COL_IN_ID, id);
-        content_values.put(COL_IN_TMP, tmp);
-        db.update(TABLE_NAME_INCOME, content_values, "ID = ? ", new String[]{id});
-        return true;
-    }
-
     public boolean updateExpense(String id, String desc, String amount/*, String date*/) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
@@ -117,6 +130,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         content_values.put(COL_EX_AMO, amount);
         /*content_values.put(COL_EX_DAT, date);*/
         db.update(TABLE_NAME_EXPENSES, content_values, "ID = ? ", new String[]{id});
+        return true;
+    }
+
+    public boolean updateTmp(String id, String tmp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues content_values = new ContentValues();
+        content_values.put(COL_TMP_ID, id);
+        content_values.put(COL_TMP, tmp);
+        db.update(TABLE_NAME_TMP, content_values, "ID = ? ", new String[]{id});
         return true;
     }
 
