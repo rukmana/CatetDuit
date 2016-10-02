@@ -89,74 +89,79 @@ public class SyncronizeActivity extends BaseActivity {
 
         IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        for (incomes.moveToFirst(); !incomes.isLast(); incomes.moveToNext()) {
-        //for (incomes.moveToPosition(tempr()); !incomes.isLast(); incomes.moveToNext()) {
+        if ((incomes.moveToPosition(tempr()))!=incomes.isLast()) {
+            for (incomes.moveToPosition(tempr()); !incomes.isLast(); incomes.moveToNext()) {
+                //for (incomes.moveToPosition(tempr()); !incomes.isLast(); incomes.moveToNext()) {
 
-            // POST
-            IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0), incomes.getString(1), incomes.getString(2));
-            Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
+                // POST
+                IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0), incomes.getString(1), incomes.getString(2));
+                Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
 
-            call.enqueue(new Callback<IncomeTransaction>() {
-                @Override
-                public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
-                    int status = response.code();
-                    tv_respond.setText(String.valueOf(incomes.getPosition()));
+                call.enqueue(new Callback<IncomeTransaction>() {
+                    @Override
+                    public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
+                        int status = response.code();
+                        tv_respond.setText(String.valueOf(incomes.getPosition()));
 
-                    // update to tmp
-                    DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
-                    Log.e("cek=", String.valueOf(incomes.getPosition()));
-                    if (tmp.getCount() == 0) {
-                        myDB1.saveTmp(String.valueOf(incomes.getPosition()));
-                    } else if (tmp.getCount() > 0) {
-                        tmp.moveToLast();
-                        myDB1.updateTmp(String.valueOf(tmp.getInt(0)), String.valueOf(incomes.getPosition()));
+                        // update to tmp
+                        DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
+                        Log.e("cek=", String.valueOf(incomes.getPosition()));
+                        if (tmp.getCount() == 0) {
+                            myDB1.saveTmp(String.valueOf(incomes.getPosition()));
+                        } else if (tmp.getCount() > 0) {
+                            tmp.moveToLast();
+                            myDB1.updateTmp(String.valueOf(tmp.getInt(0)), String.valueOf(incomes.getPosition()));
+                        }
+                        Log.e("cek2", String.valueOf(tmp.getString(1)));
+
+                        if (status == 201) {
+                            Toast.makeText(SyncronizeActivity.this, "Sync Successs", Toast.LENGTH_SHORT).show();
+                        } else if (status == 400) {
+                            Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (incomes.getPosition() == Integer.parseInt(String.valueOf(tv_respond.getText()))) {
+                            progresend();
+                        }
                     }
-                    Log.e("cek2", String.valueOf(tmp.getString(1)));
 
-                    if (status == 201) {
-                        Toast.makeText(SyncronizeActivity.this, "Sync Success", Toast.LENGTH_SHORT).show();
-                    } else if (status == 400) {
-                        Toast.makeText(SyncronizeActivity.this, "Sync Failed", Toast.LENGTH_SHORT).show();
-                    }
-
-                    if (incomes.getPosition() == Integer.parseInt(String.valueOf(tv_respond.getText()))) {
+                    @Override
+                    public void onFailure(Call<IncomeTransaction> call, Throwable t) {
                         progresend();
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                    progresend();
+                        AlertDialog.Builder alert = new AlertDialog.Builder(SyncronizeActivity.this);
 
-                    AlertDialog.Builder alert = new AlertDialog.Builder(SyncronizeActivity.this);
-
-                    alert.setCancelable(false).setTitle("Syncronize").setMessage("fails synchronize")
-                            .setPositiveButton("Skip", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(SyncronizeActivity.this, "Skip.", Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
-                                    progresend();
-                                    return;
-                                }
-                            })
-                            .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        postApi();
+                        alert.setCancelable(false).setTitle("Syncronize").setMessage("fails synchronize")
+                                .setPositiveButton("Skip", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(SyncronizeActivity.this, "Skip.", Toast.LENGTH_SHORT).show();
                                         dialog.dismiss();
-                                    } catch (Throwable t) {
-                                        t.printStackTrace();
+                                        progresend();
+                                        return;
                                     }
-                                    dialog.dismiss();
-                                    progresend();
-                                    Toast.makeText(SyncronizeActivity.this, "Internet Disonnect", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    alert.show();
-                }
-            });
+                                })
+                                .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            postApi();
+                                            dialog.dismiss();
+                                        } catch (Throwable t) {
+                                            t.printStackTrace();
+                                        }
+                                        dialog.dismiss();
+                                        progresend();
+                                        Toast.makeText(SyncronizeActivity.this, "Internet Disonnect", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                        alert.show();
+                    }
+                });
+            }
+        } else {
+            progresend();
+            Toast.makeText(SyncronizeActivity.this, "nothing to sync", Toast.LENGTH_SHORT).show();
         }
 
     }
