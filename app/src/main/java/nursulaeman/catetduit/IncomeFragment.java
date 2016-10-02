@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class IncomeFragment extends Fragment {
 
     DatabaseHelper myDB;
@@ -34,7 +38,7 @@ public class IncomeFragment extends Fragment {
                 String amo = et_amo.getText().toString();
                 String dat = et_date.getText().toString();
 
-                boolean result = myDB.saveIncome(des, amo, dat);
+                boolean result = myDB.saveIncome(des, amo, dat, getDateTime());
                 if (result) {
                     Toast.makeText(getActivity(), "Add Income Success", Toast.LENGTH_SHORT).show();
                     et_des.setText("");
@@ -48,5 +52,14 @@ public class IncomeFragment extends Fragment {
 
         return view;
     }
+
+    public String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+
 }
 

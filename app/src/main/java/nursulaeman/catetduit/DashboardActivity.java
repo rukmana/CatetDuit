@@ -14,6 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class DashboardActivity extends BaseActivity {
 
     RecyclerView rv_income;
@@ -77,7 +81,7 @@ public class DashboardActivity extends BaseActivity {
     private String[] loadincome() {
         String[] incomesA = new String[incomes.getCount()];
         while (incomes.moveToNext()) {
-            incomesA[incomes.getPosition()]=incomes.getInt(0)+" "+incomes.getString(1)+" "+incomes.getString(2);
+            incomesA[incomes.getPosition()]=incomes.getInt(0)+" "+incomes.getString(1)+" "+incomes.getString(2)+" "+incomes.getString(4)+" "+incomes.getString(5);
         }
     return incomesA;
     }
@@ -139,7 +143,7 @@ public class DashboardActivity extends BaseActivity {
                         @Override
                         public void onClick(View v) {
                             DatabaseHelper myDB1 = new DatabaseHelper(DashboardActivity.this);
-                            myDB1.updateIncome(String.valueOf(Idi), des_in.getText().toString(), amo_in.getText().toString());
+                            myDB1.updateIncome(String.valueOf(Idi), des_in.getText().toString(), amo_in.getText().toString(), getDateTime());
                             Toast.makeText(DashboardActivity.this, "updated", Toast.LENGTH_SHORT).show();
                             finish();
                             startActivity(getIntent());
@@ -183,7 +187,7 @@ public class DashboardActivity extends BaseActivity {
     private String[] loadexpenses() {
         String[] expensesA = new String[expenses.getCount()];
         while (expenses.moveToNext()) {
-            expensesA[expenses.getPosition()]=expenses.getString(1)+" "+expenses.getString(2);
+            expensesA[expenses.getPosition()]=expenses.getString(1)+" "+expenses.getString(2)+" "+expenses.getString(4)+" "+expenses.getString(5);
         }
         return expensesA;
     }
@@ -242,7 +246,7 @@ public class DashboardActivity extends BaseActivity {
                         @Override
                         public void onClick(View v) {
                             DatabaseHelper myDB1 = new DatabaseHelper(DashboardActivity.this);
-                            myDB1.updateExpense(String.valueOf(Ide), des_ex.getText().toString(), amo_ex.getText().toString());
+                            myDB1.updateExpense(String.valueOf(Ide), des_ex.getText().toString(), amo_ex.getText().toString(),getDateTime());
                             Toast.makeText(DashboardActivity.this, "updated", Toast.LENGTH_SHORT).show();
                             finish();
                             startActivity(getIntent());
@@ -283,6 +287,12 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
+    public String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 
 }
 

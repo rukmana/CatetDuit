@@ -19,12 +19,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_IN_DES = "DESCRIPTION";
     public static final String COL_IN_AMO = "AMOUNT";
     public static final String COL_IN_DAT = "DATE";
+    public static final String COL_IN_CDT = "CDATE";
+    public static final String COL_IN_UDT = "UDATE";
 
     public static final String TABLE_NAME_EXPENSES = "expenses";
     public static final String COL_EX_ID = "ID";
     public static final String COL_EX_DES = "DESCRIPTION";
     public static final String COL_EX_AMO = "AMOUNT";
     public static final String COL_EX_DAT = "DATE";
+    public static final String COL_EX_CDT = "CDATE";
+    public static final String COL_EX_UDT = "UDATE";
 
     public static final String TABLE_NAME_TMP = "tmp";
     public static final String COL_TMP_ID = "ID";
@@ -34,13 +38,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_IN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_IN_DES + " TEXT, " +
             COL_IN_AMO + " TEXT, " +
-            COL_IN_DAT + " TEXT );";
+            COL_IN_DAT + " TEXT, " +
+            COL_IN_CDT + " TEXT, " +
+            COL_IN_UDT + " TEXT );";
 
     public static final String TABLE_CREATE_EXPENSES = "CREATE TABLE " + TABLE_NAME_EXPENSES + " ( " +
             COL_EX_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_EX_DES + " TEXT, " +
             COL_EX_AMO + " TEXT, " +
-            COL_EX_DAT + " TEXT );";
+            COL_EX_DAT + " TEXT, " +
+            COL_EX_CDT + " TEXT, " +
+            COL_EX_UDT + " TEXT );";
 
     public static final String TABLE_CREATE_TMP = "CREATE TABLE " + TABLE_NAME_TMP + " ( " +
             COL_TMP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -65,22 +73,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean saveIncome(String desc, String amount, String date) {
+    public boolean saveIncome(String desc, String amount, String date, String cdate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
         content_values.put(COL_IN_DES, desc);
         content_values.put(COL_IN_AMO, amount);
         content_values.put(COL_IN_DAT, date);
+        content_values.put(COL_IN_CDT, cdate);
         long result = db.insert(TABLE_NAME_INCOME, null, content_values);
         return result != -1;
     }
 
-    public boolean saveExpense(String desc, String amount, String date) {
+    public boolean saveExpense(String desc, String amount, String date, String cdate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
         content_values.put(COL_EX_DES, desc);
         content_values.put(COL_EX_AMO, amount);
         content_values.put(COL_EX_DAT, date);
+        content_values.put(COL_EX_CDT, cdate);
         long result = db.insert(TABLE_NAME_EXPENSES, null, content_values);
         return result != -1;
     }
@@ -111,24 +121,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return expense;
     }
 
-    public boolean updateIncome(String id, String desc, String amount/*, String date*/) {
+    public boolean updateIncome(String id, String desc, String amount, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
         content_values.put(COL_IN_ID, id);
         content_values.put(COL_IN_DES, desc);
         content_values.put(COL_IN_AMO, amount);
-        /*content_values.put(COL_IN_DAT, date);*/
+        content_values.put(COL_IN_UDT, date);
         db.update(TABLE_NAME_INCOME, content_values, "ID = ? ", new String[]{id});
         return true;
     }
 
-    public boolean updateExpense(String id, String desc, String amount/*, String date*/) {
+    public boolean updateExpense(String id, String desc, String amount, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
         content_values.put(COL_EX_ID, id);
         content_values.put(COL_EX_DES, desc);
         content_values.put(COL_EX_AMO, amount);
-        /*content_values.put(COL_EX_DAT, date);*/
+        content_values.put(COL_EX_UDT, date);
         db.update(TABLE_NAME_EXPENSES, content_values, "ID = ? ", new String[]{id});
         return true;
     }
