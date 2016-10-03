@@ -127,9 +127,9 @@ public class SyncronizeActivity extends BaseActivity {
                 int status = response.code();
                 tv_respond.setText(String.valueOf(status));
                 if (String.valueOf(status).equals("201")) {
-                    Toast.makeText(SyncronizeActivity.this, "Post success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SyncronizeActivity.this, "Add success", Toast.LENGTH_SHORT).show();
                 } else if (String.valueOf(status).equals("400")) {
-                    Toast.makeText(SyncronizeActivity.this, "Post failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SyncronizeActivity.this, "Add failed", Toast.LENGTH_SHORT).show();
                 }
             }
 
