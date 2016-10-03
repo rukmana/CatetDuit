@@ -68,29 +68,30 @@ public class SyncronizeActivity extends BaseActivity {
 
         final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        while (incomes.moveToNext()) {
+        for (incomes.moveToFirst(); !incomes.isLast(); incomes.moveToNext()) {
+//        while (incomes.moveToNext()) {
             final Integer id = new Integer(incomes.getInt(0));
-            Log.e("cek1", String.valueOf(incomes.getInt(0)));
-            Call<IncomeTransaction> call = income_api.getIncomeTransaction(incomes.getInt(0));
+            Call<IncomeTransaction> call = income_api.getIncomeTransaction(id);
             call.enqueue(new Callback<IncomeTransaction>() {
                 @Override
                 public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
                     int status = response.code();
-                    Log.e("cek2", String.valueOf(status));
-                    Log.e("cek3", String.valueOf(response.body().getId()));
-                    tv_respond.setText("Id = " + String.valueOf(response.body().getId()));
-                    Log.e("ceks",String.valueOf(id));
-                    if (id != response.body().getId()) {
+                    int ids = response.body().getId();
+
+                    Log.e("cek id local", String.valueOf(id));
+                    Log.e("cek status respons", String.valueOf(status));
+                    Log.e("cek id server", String.valueOf(ids));
+
+                    if (id != ids) {
                         postApi(id);
-                    } else if (id == response.body().getId()) {
+                    } else if (id == ids) {
                         putApi();
                     }
-
                 }
 
                 @Override
                 public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                    Log.e("cek4", String.valueOf(t));
+                    Log.e("cek5", String.valueOf(t));
                     tv_respond.setText(String.valueOf(t));
                 }
             });
