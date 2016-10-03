@@ -19,7 +19,7 @@ public class IncomeTransaction {
 
 
 
-    public int getId() {
+    public int getId(int i) {
         return id;
     }
 

@@ -68,37 +68,45 @@ public class SyncronizeActivity extends BaseActivity {
 
         final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        for (incomes.moveToFirst(); !incomes.isLast(); incomes.moveToNext()) {
-            final Integer id = new Integer(incomes.getInt(0));
-            Call<IncomeTransaction> call = income_api.getIncomeTransaction(id);
-            call.enqueue(new Callback<IncomeTransaction>() {
-                @Override
-                public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
-                    int status = response.code();
-                    int ids = response.body().getId();
+        if (incomes.getCount() > 1) {
+            incomes.moveToFirst();
+            do {
+                final Integer id = new Integer(incomes.getInt(0));
+                Call<IncomeTransaction> call = income_api.getIncomeTransaction(id);
+                call.enqueue(new Callback<IncomeTransaction>() {
+                    @Override
+                    public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
+                        int status = response.code();
+                        int ids = response.body().getId(id); // api dummy cant dynamic
+                        int pos = incomes.getPosition();
 
-                    Log.e("cek id local", String.valueOf(id));
-                    Log.e("cek status respons", String.valueOf(status));
-                    Log.e("cek id server", String.valueOf(ids));
+                        Log.e("cek id local", String.valueOf(id));
+                        Log.e("cek status respons", String.valueOf(status));
+                        Log.e("cek id server", String.valueOf(ids));
 
-                    if (id != ids) {
-                        postApi(id);
-                    } else if (id == ids) {
-                        putApi(id);
+                        if (id != ids) {
+                            postApi(pos);
+                        } else if (id == ids) {
+                            putApi(pos);
+                        }
+                        progresStop();
                     }
-                    progresStop();
-                }
 
-                @Override
-                public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                    Log.e("cek5", String.valueOf(t));
-                    tv_respond.setText(String.valueOf(t));
-                }
-            });
+                    @Override
+                    public void onFailure(Call<IncomeTransaction> call, Throwable t) {
+                        Log.e("cek5", String.valueOf(t));
+                        tv_respond.setText(String.valueOf(t));
+                    }
+                });
+                incomes.moveToNext();
+            } while (!incomes.isLast());
+        } else {
+            Toast.makeText(SyncronizeActivity.this, "nothing to sync", Toast.LENGTH_SHORT).show();
+            progresStop();
         }
     }
 
-    private void postApi(int id) {
+    private void postApi(int pos) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create();
@@ -110,7 +118,7 @@ public class SyncronizeActivity extends BaseActivity {
 
         final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
         // POST
-        incomes.moveToPosition(id);
+        incomes.moveToPosition(pos);
         IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0), incomes.getString(1), incomes.getString(2));
         Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
         call.enqueue(new Callback<IncomeTransaction>() {
@@ -127,6 +135,7 @@ public class SyncronizeActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<IncomeTransaction> call, Throwable t) {
+                Toast.makeText(SyncronizeActivity.this, "post api", Toast.LENGTH_SHORT).show();
                 tv_respond.setText(String.valueOf(t));
             }
 
@@ -134,7 +143,7 @@ public class SyncronizeActivity extends BaseActivity {
     }
 
 
-    private void putApi(int id) {
+    private void putApi(int pos) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create();
@@ -146,7 +155,7 @@ public class SyncronizeActivity extends BaseActivity {
 
         final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
         // PUT
-        incomes.moveToPosition(id);
+        incomes.moveToPosition(pos);
         Call<IncomeTransaction> call = income_api.updateIncomeTransaction(incomes.getInt(0), new IncomeTransaction(incomes.getInt(0), incomes.getString(1), incomes.getString(2)));
         call.enqueue(new Callback<IncomeTransaction>() {
             @Override
@@ -162,6 +171,7 @@ public class SyncronizeActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<IncomeTransaction> call, Throwable t) {
+                Toast.makeText(SyncronizeActivity.this, "put api", Toast.LENGTH_SHORT).show();
                 tv_respond.setText(String.valueOf(t));
             }
         });
