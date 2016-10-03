@@ -15,8 +15,8 @@ public interface IncomeTransactionApi {
     @GET("/income_transactions")
     Call<IncomeTransactions> getIncomeTransactions();
 
-    @GET("/income_transactions/{id}")
-    Call<IncomeTransaction> getIncomeTransction(@Path("id") String incometransaction_id);
+    @GET("/income_transaction/{id}")
+    Call<IncomeTransaction> getIncomeTransaction(@Path("id") int incometransaction_id);
 
 
     @PUT("/income_transactions/{id}")
@@ -26,8 +26,9 @@ public interface IncomeTransactionApi {
     @POST("/income_transactions")
     Call<IncomeTransaction> saveIncomeTransaction(@Body IncomeTransaction incometransaction);
 
-
     @DELETE("/income_transactions/{id}")
     Call<IncomeTransaction> deleteIncomeTransaction(@Path("id") String incometransaction_id);
+
+
 
 }
