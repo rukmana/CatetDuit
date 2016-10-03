@@ -19,7 +19,7 @@ public interface IncomeTransactionApi {
     Call<IncomeTransaction> getIncomeTransaction(@Path("id") int incometransaction_id);
 
 
-    @PUT("/income_transactions/{id}")
+    @PUT("/income_transaction/{id}")
     Call<IncomeTransaction> updateIncomeTransaction(@Path("id") int incometransaction_id, @Body IncomeTransaction incometransaction);
 
 

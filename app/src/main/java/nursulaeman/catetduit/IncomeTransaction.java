@@ -17,6 +17,8 @@ public class IncomeTransaction {
         this.amount = amount;
     }
 
+
+
     public int getId() {
         return id;
     }
