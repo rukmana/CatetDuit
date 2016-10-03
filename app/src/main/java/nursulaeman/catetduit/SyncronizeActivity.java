@@ -68,7 +68,7 @@ public class SyncronizeActivity extends BaseActivity {
 
         final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
-        if (incomes.getCount() > 1) {
+        if (incomes.getCount() > 0) {
             incomes.moveToFirst();
             do {
                 final Integer id = new Integer(incomes.getInt(0));
@@ -77,7 +77,7 @@ public class SyncronizeActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
                         int status = response.code();
-                        int ids = response.body().getId(id); // api dummy cant dynamic
+                        int ids = response.body().getId(id); // api dummy can't dynamic
                         int pos = incomes.getPosition();
 
                         Log.e("cek id local", String.valueOf(id));
@@ -135,7 +135,6 @@ public class SyncronizeActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                Toast.makeText(SyncronizeActivity.this, "post api", Toast.LENGTH_SHORT).show();
                 tv_respond.setText(String.valueOf(t));
             }
 
@@ -171,7 +170,6 @@ public class SyncronizeActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<IncomeTransaction> call, Throwable t) {
-                Toast.makeText(SyncronizeActivity.this, "put api", Toast.LENGTH_SHORT).show();
                 tv_respond.setText(String.valueOf(t));
             }
         });
