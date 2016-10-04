@@ -105,7 +105,7 @@ public class SyncronizeActivity extends BaseActivity {
                         @Override
                         public void onFailure(Call<IncomeTransaction> call, Throwable t) {
                             Log.e("cek5", String.valueOf(t));
-                            tv_respond.setText(String.valueOf(t));
+                            tv_respond.setText("cek internet connection, then try again");
                             progresStop();
                         }
                     });
@@ -215,7 +215,7 @@ public class SyncronizeActivity extends BaseActivity {
                 .setPositiveButton("Skip", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(SyncronizeActivity.this, "Skip.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SyncronizeActivity.this, "Skip", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                     }
                 })
