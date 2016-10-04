@@ -34,7 +34,7 @@ public class SyncronizeActivity extends BaseActivity {
 
     boolean net = true;
     TextView tv_respond;
-    Cursor incomes;
+    Cursor incomes, tmp;
     ProgressDialog progressDialog;
 
     @Override
@@ -45,6 +45,7 @@ public class SyncronizeActivity extends BaseActivity {
 
         DatabaseHelper myDB = new DatabaseHelper(this);
         incomes = myDB.listIncome();
+        tmp = myDB.listIncome();
 
         tv_respond = (TextView) findViewById(R.id.tv_respond);
 
@@ -99,6 +100,17 @@ public class SyncronizeActivity extends BaseActivity {
                             } else if (id == ids) {
                                 putApi(pos);
                             }
+
+                            // update to tmp
+                            DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
+                            int pos1 = incomes.getPosition();
+                            if (tmp.getCount() == 0) {
+                                myDB1.saveTmp(String.valueOf(pos1));
+                            } else if (tmp.getCount() > 0) {
+                                tmp.moveToLast();
+                                myDB1.updateTmp(String.valueOf(tmp.getInt(0)), String.valueOf(pos1));
+                            }
+
                             progresStop();
                         }
 
