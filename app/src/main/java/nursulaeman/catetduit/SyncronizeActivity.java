@@ -49,6 +49,7 @@ public class SyncronizeActivity extends BaseActivity {
         tv_respond = (TextView) findViewById(R.id.tv_respond);
 
         Button btn_sync = (Button) findViewById(R.id.btn_Sync);
+
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,26 +73,37 @@ public class SyncronizeActivity extends BaseActivity {
                         final Integer id = new Integer(incomes.getInt(0));
                         Call<IncomeTransaction> call = income_api.getIncomeTransaction(id);
                         call.enqueue(new Callback<IncomeTransaction>() {
+
                             @Override
                             public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
 
                                 status = response.code();
                                 idserver = response.body().getId(id);
                                 tv_respond.setText(String.valueOf(status));
+                                int pos = incomes.getPosition();
 
                                 Log.e("cek id local", String.valueOf(id));
                                 Log.e("cek status respons", String.valueOf(status));
                                 Log.e("cek id server", String.valueOf(idserver));
 
+                                if (id != idserver) {
+                                    postApi(pos-1);
+                                } else if (id == idserver) {
+                                    putApi(pos-1);
+                                }
+
+                                progresStop();
+
                             }
+
                             @Override
                             public void onFailure(Call<IncomeTransaction> call, Throwable t) {
                                 tv_respond.setText(String.valueOf(t));
                             }
                         });
-                    incomes.moveToNext();
+
+                        incomes.moveToNext();
                     } while (!incomes.isAfterLast());
-                    progresStop();
                 } else {
                     Toast.makeText(SyncronizeActivity.this, "nothing to sync", Toast.LENGTH_SHORT).show();
                     progresStop();
@@ -110,9 +122,78 @@ public class SyncronizeActivity extends BaseActivity {
     }
 
     private void progresStop() {
-        if (progressDialog.isShowing()){
+        if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+    }
+
+    private void postApi(int pos) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://private-fc7f8-cateduit.apiary-mock.com/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
+        // POST
+        incomes.moveToPosition(pos);
+        IncomeTransaction incometransaction = new IncomeTransaction(incomes.getInt(0), incomes.getString(1), incomes.getString(2));
+        Call<IncomeTransaction> call = income_api.saveIncomeTransaction(incometransaction);
+        call.enqueue(new Callback<IncomeTransaction>() {
+            @Override
+            public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
+                int status = response.code();
+                tv_respond.setText(String.valueOf(status));
+                if (String.valueOf(status).equals("201")) {
+                    Toast.makeText(SyncronizeActivity.this, "Add success", Toast.LENGTH_SHORT).show();
+                } else if (String.valueOf(status).equals("400")) {
+                    Toast.makeText(SyncronizeActivity.this, "Add failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IncomeTransaction> call, Throwable t) {
+                tv_respond.setText(String.valueOf(t));
+            }
+
+        });
+    }
+
+
+    private void putApi(int pos) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://private-fc7f8-cateduit.apiary-mock.com/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        final IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
+        // PUT
+        incomes.moveToPosition(pos);
+        Call<IncomeTransaction> call = income_api.updateIncomeTransaction(incomes.getInt(0), new IncomeTransaction(incomes.getInt(0), incomes.getString(1), incomes.getString(2)));
+        call.enqueue(new Callback<IncomeTransaction>() {
+            @Override
+            public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
+                int status = response.code();
+                tv_respond.setText(String.valueOf(status));
+                if (String.valueOf(status).equals("201")) {
+                    Toast.makeText(SyncronizeActivity.this, "Update successs", Toast.LENGTH_SHORT).show();
+                } else if (String.valueOf(status).equals("400")) {
+                    Toast.makeText(SyncronizeActivity.this, "Update failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IncomeTransaction> call, Throwable t) {
+                tv_respond.setText(String.valueOf(t));
+            }
+        });
     }
 
 } // class
