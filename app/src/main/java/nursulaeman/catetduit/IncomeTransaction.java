@@ -10,14 +10,13 @@ public class IncomeTransaction {
     private String description;
     private String amount;
     private String date;
+    private String udate;
 
     public IncomeTransaction(int id, String description, String amount) {
         this.id = id;
         this.description = description;
         this.amount = amount;
     }
-
-
 
     public int getId(int i) {
         return id;
@@ -49,5 +48,13 @@ public class IncomeTransaction {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getUdate() {
+        return udate;
+    }
+
+    public void setUdate(String udate) {
+        this.udate = udate;
     }
 }

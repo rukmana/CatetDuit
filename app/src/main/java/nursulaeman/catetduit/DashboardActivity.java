@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -146,7 +147,9 @@ public class DashboardActivity extends BaseActivity {
                             DatabaseHelper myDB1 = new DatabaseHelper(DashboardActivity.this);
                             myDB1.updateIncome(String.valueOf(Idi), des_in.getText().toString(), amo_in.getText().toString(), getDateTime());
                             tmp.moveToLast();
-                            myDB1.updateTmp(String.valueOf(tmp.getInt(0)), incomes.getPosition());
+                            if (incomes.getPosition() < tmp.getInt(1)) {
+                                myDB1.updateTmp(String.valueOf(tmp.getInt(0)), incomes.getPosition());
+                            }
                             Toast.makeText(DashboardActivity.this, "updated", Toast.LENGTH_SHORT).show();
                             finish();
                             startActivity(getIntent());
