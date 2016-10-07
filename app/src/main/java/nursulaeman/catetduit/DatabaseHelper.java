@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_CREATE_TMP = "CREATE TABLE " + TABLE_NAME_TMP + " ( " +
             COL_TMP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COL_TMP + " TEXT );";
+            COL_TMP + " INTEGER );";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -95,7 +95,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean saveTmp(String tmp) {
+    public boolean saveTmp(Integer tmp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
         content_values.put(COL_TMP, tmp);
@@ -143,7 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean updateTmp(String id, String tmp) {
+    public boolean updateTmp(String id, Integer tmp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content_values = new ContentValues();
         content_values.put(COL_TMP_ID, id);

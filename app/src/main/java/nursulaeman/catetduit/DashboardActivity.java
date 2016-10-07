@@ -24,7 +24,7 @@ public class DashboardActivity extends BaseActivity {
     RecyclerView rv_expenses;
     RecyclerView.Adapter rv_adapter, rv_adapter2;
     RecyclerView.LayoutManager rv_layout_manager, rv_layout_manager2;
-    Cursor incomes, inc, expenses, exp;
+    Cursor incomes, inc, expenses, exp, tmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class DashboardActivity extends BaseActivity {
         inc = myDB.listIncome();
         expenses = myDB.listExpense();
         exp = myDB.listExpense();
+        tmp = myDB.listTmp();
 
         // Code Recycleview
 
@@ -144,6 +145,8 @@ public class DashboardActivity extends BaseActivity {
                         public void onClick(View v) {
                             DatabaseHelper myDB1 = new DatabaseHelper(DashboardActivity.this);
                             myDB1.updateIncome(String.valueOf(Idi), des_in.getText().toString(), amo_in.getText().toString(), getDateTime());
+                            tmp.moveToLast();
+                            myDB1.updateTmp(String.valueOf(tmp.getInt(0)), incomes.getPosition());
                             Toast.makeText(DashboardActivity.this, "updated", Toast.LENGTH_SHORT).show();
                             finish();
                             startActivity(getIntent());

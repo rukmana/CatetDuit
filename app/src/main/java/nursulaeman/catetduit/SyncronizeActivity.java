@@ -33,7 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SyncronizeActivity extends BaseActivity {
 
     TextView tv_respond;
-    Cursor incomes;
+    Cursor incomes, tmp;
     ProgressDialog progressDialog;
     int status, idserver = 0;
 
@@ -45,8 +45,17 @@ public class SyncronizeActivity extends BaseActivity {
 
         DatabaseHelper myDB = new DatabaseHelper(this);
         incomes = myDB.listIncome();
+        tmp = myDB.listTmp();
 
         tv_respond = (TextView) findViewById(R.id.tv_respond);
+
+        //append data student to buffer
+        StringBuffer buffer = new StringBuffer();
+        while (tmp.moveToNext()) {
+            buffer.append("tmp : " + tmp.getInt(1) + "\n");
+        }
+        //show data student
+        alert_message("List tmp", buffer.toString());
 
         Button btn_sync = (Button) findViewById(R.id.btn_Sync);
 
@@ -68,10 +77,22 @@ public class SyncronizeActivity extends BaseActivity {
                 IncomeTransactionApi income_api = retrofit.create(IncomeTransactionApi.class);
 
                 if (incomes.getCount() > 0) {
-                    incomes.moveToFirst();
+                    incomes.moveToPosition(point());
                     do {
                         final Integer id = new Integer(incomes.getInt(0));
                         Call<IncomeTransaction> call = income_api.getIncomeTransaction(id);
+
+                        // update to tmp
+                        DatabaseHelper myDB1 = new DatabaseHelper(SyncronizeActivity.this);
+                        int pos1 = incomes.getPosition();
+                        Log.e("cek posisi ", String.valueOf(pos1));
+                        if (tmp.getCount() == 0) {
+                            myDB1.saveTmp(pos1);
+                        } else if (tmp.getCount() > 0) {
+                            tmp.moveToLast();
+                            myDB1.updateTmp(String.valueOf(tmp.getInt(0)), pos1);
+                        }
+
                         call.enqueue(new Callback<IncomeTransaction>() {
 
                             @Override
@@ -91,6 +112,8 @@ public class SyncronizeActivity extends BaseActivity {
                                 } else if (id == idserver) {
                                     putApi(pos-1);
                                 }
+
+
 
                                 progresStop();
 
@@ -112,6 +135,14 @@ public class SyncronizeActivity extends BaseActivity {
         });
 
     } // on create
+
+    public void alert_message(String title, String message) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+    }
 
     private void progresStart() {
         progressDialog = new ProgressDialog(SyncronizeActivity.this);
@@ -194,6 +225,16 @@ public class SyncronizeActivity extends BaseActivity {
                 tv_respond.setText(String.valueOf(t));
             }
         });
+    }
+
+    // to cursor start from, the value got from last update or sync stop before finish
+    private int point(){
+        int x = 0;
+        if (tmp.getCount()>0) {
+            tmp.moveToLast();
+            x = tmp.getInt(1);
+        }
+        return x;
     }
 
 } // class
