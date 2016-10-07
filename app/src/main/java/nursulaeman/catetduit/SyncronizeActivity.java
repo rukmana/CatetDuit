@@ -68,9 +68,8 @@ public class SyncronizeActivity extends BaseActivity {
 
                 if (incomes.getCount() > 0) {
                     incomes.moveToFirst();
-                    while (incomes.moveToNext()){
+                    do {
                         final Integer id = new Integer(incomes.getInt(0));
-                        Log.e("cek id local a", String.valueOf(id));
                         Call<IncomeTransaction> call = income_api.getIncomeTransaction(id);
                         call.enqueue(new Callback<IncomeTransaction>() {
                             @Override
@@ -80,7 +79,7 @@ public class SyncronizeActivity extends BaseActivity {
                                 idserver = response.body().getId(id);
                                 tv_respond.setText(String.valueOf(status));
 
-                                Log.e("cek id local b", String.valueOf(id));
+                                Log.e("cek id local", String.valueOf(id));
                                 Log.e("cek status respons", String.valueOf(status));
                                 Log.e("cek id server", String.valueOf(idserver));
 
@@ -90,7 +89,8 @@ public class SyncronizeActivity extends BaseActivity {
                                 tv_respond.setText(String.valueOf(t));
                             }
                         });
-                    }
+                    incomes.moveToNext();
+                    } while (!incomes.isAfterLast());
                     progresStop();
                 } else {
                     Toast.makeText(SyncronizeActivity.this, "nothing to sync", Toast.LENGTH_SHORT).show();
