@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import nursulaeman.catetduit.validation.Validation;
+
 public class ExpensesFragment extends Fragment {
 
     DatabaseHelper myDB;
@@ -30,6 +32,7 @@ public class ExpensesFragment extends Fragment {
         et_date = (EditText)view.findViewById(R.id.et_date_expenses);
         bt_save = (Button)view.findViewById(R.id.bt_save_expenses);
         bt_cancel = (Button)view.findViewById(R.id.bt_cancel_expenses);
+        final Validation val = new Validation();
 
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,16 +41,26 @@ public class ExpensesFragment extends Fragment {
                 String amo = et_amo.getText().toString();
                 String dat = et_date.getText().toString();
 
-                boolean result = myDB.saveExpense(des, amo, dat, getDateTime());
-                if (result) {
-                    Toast.makeText(getActivity(), "Add Expenses Success", Toast.LENGTH_SHORT).show();
-                    et_des.setText("");
-                    et_amo.setText("");
-                    et_date.setText("");
-                }else {
-                    Toast.makeText(getActivity(), "Add Expenses Failed", Toast.LENGTH_SHORT).show();
+                if (!val.isValidText(des)) {
+                    et_des.requestFocus();
+                    et_des.setError("Required field");
+                } else if (!val.isValidText(amo)) {
+                    et_amo.requestFocus();
+                    et_amo.setError("Required field");
+                } else {
+
+                    boolean result = myDB.saveExpense(des, amo, dat, getDateTime());
+                    if (result) {
+                        Toast.makeText(getActivity(), "Add Expenses Success", Toast.LENGTH_SHORT).show();
+                        et_des.setText("");
+                        et_amo.setText("");
+                        et_date.setText("");
+                    } else {
+                        Toast.makeText(getActivity(), "Add Expenses Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+
         });
 
         return view;
