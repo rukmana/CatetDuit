@@ -34,6 +34,7 @@ public class IncomeFragment extends Fragment {
         bt_save = (Button) view.findViewById(R.id.bt_save_income);
         bt_cancel = (Button) view.findViewById(R.id.bt_cancel_income);
         et_date.setShowSoftInputOnFocus(false);
+        et_date.requestFocus();
         final Validation val = new Validation();
 
         bt_save.setOnClickListener(new View.OnClickListener() {
