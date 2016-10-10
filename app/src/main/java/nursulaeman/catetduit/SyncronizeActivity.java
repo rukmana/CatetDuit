@@ -203,11 +203,11 @@ public class SyncronizeActivity extends BaseActivity {
             public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
                 int status = response.code();
                 tv_respond.setText(String.valueOf(status));
-                if (String.valueOf(status).equals("201")) {
-                    Toast.makeText(SyncronizeActivity.this, "Add success", Toast.LENGTH_SHORT).show();
-                } else if (String.valueOf(status).equals("400")) {
-                    Toast.makeText(SyncronizeActivity.this, "Add failed", Toast.LENGTH_SHORT).show();
-                }
+//                if (String.valueOf(status).equals("201")) {
+//                    Toast.makeText(SyncronizeActivity.this, "Add success", Toast.LENGTH_SHORT).show();
+//                } else if (String.valueOf(status).equals("400")) {
+//                    Toast.makeText(SyncronizeActivity.this, "Add failed", Toast.LENGTH_SHORT).show();
+//                }
             }
 
             @Override
@@ -238,11 +238,11 @@ public class SyncronizeActivity extends BaseActivity {
             public void onResponse(Call<IncomeTransaction> call, Response<IncomeTransaction> response) {
                 int status = response.code();
                 tv_respond.setText(String.valueOf(status));
-                if (String.valueOf(status).equals("201")) {
-                    Toast.makeText(SyncronizeActivity.this, "Update successs", Toast.LENGTH_SHORT).show();
-                } else if (String.valueOf(status).equals("400")) {
-                    Toast.makeText(SyncronizeActivity.this, "Update failed", Toast.LENGTH_SHORT).show();
-                }
+//                if (String.valueOf(status).equals("201")) {
+//                    Toast.makeText(SyncronizeActivity.this, "Update successs", Toast.LENGTH_SHORT).show();
+//                } else if (String.valueOf(status).equals("400")) {
+//                    Toast.makeText(SyncronizeActivity.this, "Update failed", Toast.LENGTH_SHORT).show();
+//                }
             }
 
             @Override

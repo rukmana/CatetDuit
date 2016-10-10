@@ -83,7 +83,7 @@ public class DashboardActivity extends BaseActivity {
     private String[] loadincome() {
         String[] incomesA = new String[incomes.getCount()];
         while (incomes.moveToNext()) {
-            incomesA[incomes.getPosition()]=incomes.getInt(0)+" "+incomes.getString(1)+" "+incomes.getString(2)+" "+incomes.getString(4)+" "+incomes.getString(5);
+            incomesA[incomes.getPosition()]=incomes.getString(1)+" : "+incomes.getString(2);
         }
     return incomesA;
     }
@@ -194,7 +194,7 @@ public class DashboardActivity extends BaseActivity {
     private String[] loadexpenses() {
         String[] expensesA = new String[expenses.getCount()];
         while (expenses.moveToNext()) {
-            expensesA[expenses.getPosition()]=expenses.getString(1)+" "+expenses.getString(2)+" "+expenses.getString(4)+" "+expenses.getString(5);
+            expensesA[expenses.getPosition()]=expenses.getString(1)+" : "+expenses.getString(2);
         }
         return expensesA;
     }
