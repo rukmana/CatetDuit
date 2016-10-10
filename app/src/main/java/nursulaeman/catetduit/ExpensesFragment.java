@@ -1,5 +1,6 @@
 package nursulaeman.catetduit;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import nursulaeman.catetduit.validation.DatePickExpenses;
+import nursulaeman.catetduit.validation.DatePickIncome;
 import nursulaeman.catetduit.validation.Validation;
 
 public class ExpensesFragment extends Fragment {
@@ -32,6 +35,7 @@ public class ExpensesFragment extends Fragment {
         et_date = (EditText)view.findViewById(R.id.et_date_expenses);
         bt_save = (Button)view.findViewById(R.id.bt_save_expenses);
         bt_cancel = (Button)view.findViewById(R.id.bt_cancel_expenses);
+        et_date.setShowSoftInputOnFocus(false);
         final Validation val = new Validation();
 
         bt_save.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +51,9 @@ public class ExpensesFragment extends Fragment {
                 } else if (!val.isValidText(amo)) {
                     et_amo.requestFocus();
                     et_amo.setError("Required field");
+                } else if (!val.isValidText(dat)) {
+                    et_date.requestFocus();
+                    et_date.setError("Required field");
                 } else {
 
                     boolean result = myDB.saveExpense(des, amo, dat, getDateTime());
@@ -63,12 +70,21 @@ public class ExpensesFragment extends Fragment {
 
         });
 
+        et_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment picker = new DatePickExpenses();
+                picker.setCancelable(false);
+                picker.show(getActivity().getSupportFragmentManager(), "DatePicker");
+            }
+        });
+
         return view;
     }
 
     public String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                "dd-MM-yyyy HH:mm:ss", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
     }
