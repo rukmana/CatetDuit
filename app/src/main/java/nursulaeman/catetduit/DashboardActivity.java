@@ -99,6 +99,7 @@ public class DashboardActivity extends BaseActivity {
                 super(v);
                 cv_income = (CardView) v.findViewById(R.id.cv_income);
                 tv_income = (TextView) v.findViewById(R.id.tv_income);
+                cv_income.setElevation(0);
             }
         }
 
@@ -209,6 +210,7 @@ public class DashboardActivity extends BaseActivity {
                 super(v);
                 cv_expenses = (CardView) v.findViewById(R.id.cv_expenses);
                 tv_expenses = (TextView) v.findViewById(R.id.tv_expenses);
+                cv_expenses.setElevation(0);
             }
         }
 

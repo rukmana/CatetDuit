@@ -1,5 +1,6 @@
 package nursulaeman.catetduit;
 
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +69,14 @@ public class ExpensesFragment extends Fragment {
                 }
             }
 
+        });
+
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent lay_sync = new Intent(getActivity(), MainActivity.class);
+                startActivity(lay_sync);
+            }
         });
 
         et_date.setOnClickListener(new View.OnClickListener() {

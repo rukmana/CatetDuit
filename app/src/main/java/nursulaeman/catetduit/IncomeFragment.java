@@ -1,5 +1,6 @@
 package nursulaeman.catetduit;
 
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -65,6 +66,14 @@ public class IncomeFragment extends Fragment {
                         Toast.makeText(getActivity(), "Add Income Failed", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+        });
+
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent lay_sync = new Intent(getActivity(), MainActivity.class);
+                startActivity(lay_sync);
             }
         });
 
